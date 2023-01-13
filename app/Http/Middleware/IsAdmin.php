@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class IsAdmin
 {
@@ -19,7 +20,7 @@ class IsAdmin
         if(!auth()->check()){
             return redirect('login');
         }
-        if(empty(auth()->user()->role)){
+        if(empty(auth()->user()->role) || !User::isAllowMenu(request()->path())){
             abort(403);
         }
         return $next($request);
