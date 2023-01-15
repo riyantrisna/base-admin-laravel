@@ -1,21 +1,15 @@
 <?php
 
 use App\Models\User;
+use App\Models\Translation;
 
-if (!function_exists('user_menu'))
+if (!function_exists('echo_menu'))
 {
-    function user_menu($parent_id)
-    {
-        $menu = User::getMenu($parent_id)->get()->toArray();
 
-        return $menu;
-    }
-
-    function echo_menu($parent_id)
+    function echo_menu($parent_id = 0)
     {
         $menu_array = User::getMenu($parent_id)->get()->toArray();
 
-        //go through each top level menu item
         foreach($menu_array as $menu) {
 
             $menu_child = User::getMenu($menu['menu_id'])->get()->toArray();
@@ -44,11 +38,31 @@ if (!function_exists('user_menu'))
                         </a>';
             if(!empty($menu_child) && count($menu_child) > 0) {
                 echo '<ul class="nav nav-treeview">';
-                //echo the child menu
                 echo_menu($menu['menu_id']);
                 echo '</ul>';
             }
             echo '</li>';
+        }
+    }
+}
+
+if (!function_exists('multi_lang'))
+{
+    function multi_lang($key)
+    {
+        $lang = !empty(auth()->user()->lang_code) ? auth()->user()->lang_code : env('LANG_DEFAULT');
+
+        $translation = Translation::select(
+                            'ckt.keytext_text'
+                        )
+                        ->leftJoin("core_key_text AS ckt", "ckt.keytext_key_id" , "core_key.key_id")
+                        ->where('ckt.keytext_lang_code', $lang)
+                        ->where('core_key.key_code', $key)
+                        ->first();
+        if(!empty($translation)){
+            return $translation->keytext_text;
+        }else{
+            return "[".$key."]";
         }
     }
 }

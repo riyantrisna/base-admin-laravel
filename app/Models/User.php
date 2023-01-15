@@ -70,6 +70,8 @@ class User extends Authenticatable
 
     public function getMenu($parent_id)
     {
+        $lang = !empty(auth()->user()->lang_code) ? auth()->user()->lang_code : env('LANG_DEFAULT');
+
         $menu_id = Self::select('mg.menugroup_menu_id')
                     ->join('menu_group AS mg', 'mg.menugroup_id', 'users.role')
                     ->where('users.id', auth()->user()->id)->first();
@@ -86,7 +88,7 @@ class User extends Authenticatable
                     ->whereIn('menu_id', explode(',', $menu_id->menugroup_menu_id))
                     ->where('menu_status', 1)
                     ->where('menu_parent_id', $parent_id)
-                    ->where('mn.menuname_lang_code', auth()->user()->lang_code)
+                    ->where('mn.menuname_lang_code', $lang)
                     ->orderBy('menu_order', 'asc');
 
             if(!empty($menu)){

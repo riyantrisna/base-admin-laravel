@@ -9,6 +9,6 @@ class ProductCategoryController extends Controller
     public function index()
     {
         $data['title'] = " - Product Category";
-        return view('product.index', $data);
+        return view('product-category.index', $data);
     }
 }
