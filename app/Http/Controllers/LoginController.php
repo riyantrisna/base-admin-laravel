@@ -24,8 +24,8 @@ class LoginController extends Controller
     {
         $credentials = $request->validate(
             [
-            'email' => ['required', 'email:dns'],
-            'password' => ['required'],
+                'email' => ['required', 'email'],
+                'password' => ['required'],
             ],
             [
                 'email.required' => 'Email dibutuhkan.',
@@ -40,13 +40,29 @@ class LoginController extends Controller
         ];
         if (Auth::attempt($data)) {
 
-            $request->session()->regenerate();
+            $menu_default = User::getMenuDefault();
 
-            $user = User::where('email', $request->email)->first();
-            $user->last_login = date('Y-m-d H:i:s');
-            $user->save();
+            if(!empty($menu_default)){
+                $request->session()->regenerate();
 
-            return redirect()->intended('dashboard');
+                $user = User::where('email', $request->email)->first();
+                $user->last_login = date('Y-m-d H:i:s');
+                $user->save();
+
+                return redirect()->intended($menu_default);
+            }else{
+
+                Auth::logout();
+
+                $request->session()->invalidate();
+
+                $request->session()->regenerateToken();
+
+                return back()->with([
+                    'loginError'=> 'Anda tidak memiliki akses!',
+                    'email'=> $request->email,
+                ]);
+            }
         }
 
         return back()->with([

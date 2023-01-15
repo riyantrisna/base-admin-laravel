@@ -99,4 +99,19 @@ class User extends Authenticatable
         }
     }
 
+    public function getMenuDefault()
+    {
+        $menu_url = Self::select('m.menu_url')
+                    ->join('menu_group AS mg', 'mg.menugroup_id', 'users.role')
+                    ->leftJoin('menu AS m', 'm.menu_id', 'mg.menugroup_home_menu_id')
+                    ->where('users.id', auth()->user()->id)
+                    ->first();
+
+        if(!empty($menu_url)){
+            return $menu_url->menu_url;
+        }else{
+            return "";
+        }
+    }
+
 }
