@@ -39,4 +39,58 @@ scratch. This page gets rid of all links and provides the needed markup only.
 </div>
 <!-- ./wrapper -->
 
+<!-- Modal -->
+<div class="modal fade" id="changePasswordModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <b class="modal-title" id="changePasswordModalLabel">{{ multi_lang('change_password') }}</b>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form id="formChangePassword">
+                <div class="form-group row" id="msg-change-password"></div>
+                <div class="form-group row">
+                    <label for="old_password" class="col-sm-5 col-form-label font-weight-normal">{{ multi_lang('old_password') }}</label>
+                    <div class="col-sm-7">
+                        <input type="password" class="form-control" id="old_password" name="old_password">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="new_password" class="col-sm-5 col-form-label font-weight-normal">{{ multi_lang('new_password') }}</label>
+                    <div class="col-sm-7">
+                        <input type="password" class="form-control" id="new_password" name="new_password">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="re_new_password" class="col-sm-5 col-form-label font-weight-normal">{{ multi_lang('re_new_password') }}</label>
+                    <div class="col-sm-7">
+                        <input type="password" class="form-control" id="re_new_password" name="re_new_password">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ multi_lang('cancel') }}</button>
+          <button type="button" class="btn btn-primary">{{ multi_lang('save') }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- REQUIRED SCRIPTS -->
+
+<!-- jQuery -->
+<script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
+<!-- Bootstrap 4 -->
+<script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<!-- AdminLTE App -->
+<script src="{{ asset('assets/dist/js/adminlte.min.js') }}"></script>
+<!-- Axios -->
+<script src="{{ asset('assets/dist/js/axios_1.2.2.min.js') }}"></script>
+</body>
+</html>
+
 

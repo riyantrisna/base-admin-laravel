@@ -21,14 +21,14 @@
                 <span class="">{{ auth()->user()->name }}</span>
             </a>
             <div class="dropdown-menu dropdown-menu dropdown-menu-right">
-                <a href="#" class="dropdown-item">
-                    <i class="fas fa-cog mr-2"></i> Change Password
+                <a href="" class="dropdown-item" data-toggle="modal" data-target="#changePasswordModal">
+                    <i class="fas fa-cog mr-2"></i> {{ multi_lang('change_password') }}
                 </a>
                 <div class="dropdown-divider"></div>
                 <form action="/logout" method="post">
                     @csrf
                     <button class="dropdown-item" type="submit">
-                        <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                        <i class="fas fa-sign-out-alt mr-2"></i> {{ multi_lang('logout') }}
                     </button>
                 </form>
             </div>
@@ -36,14 +36,3 @@
 	</ul>
 </nav>
 <!-- /.navbar -->
-
-<!-- REQUIRED SCRIPTS -->
-
-<!-- jQuery -->
-<script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
-<!-- Bootstrap 4 -->
-<script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-<!-- AdminLTE App -->
-<script src="{{ asset('assets/dist/js/adminlte.min.js') }}"></script>
-</body>
-</html>
