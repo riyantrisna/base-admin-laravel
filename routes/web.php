@@ -31,3 +31,7 @@ Route::middleware(['admin'])->group(function () {
     Route::get('/product', [ProductController::class, 'index']);
     Route::get('/product-category', [ProductCategoryController::class, 'index']);
 });
+
+Route::middleware(['adminapi'])->group(function () {
+    Route::post('/change-password', [LoginController::class, 'changePassword']);
+});

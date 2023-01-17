@@ -1,16 +1,3 @@
-function change_password(){
-    $.ajax({
-        type: "POST",
-        url: 'change-password',
-        data: $("#formChangePassword").serialize(),
-    }).done(function (response) {
-        $("#msg-change-password").html(response)
-    }).fail( function (jqXHR, exception) {
-        let msg = jquery_ajax_error(jqXHR, exception)
-        $('#msg-change-password').html(msg);
-    });
-}
-
 function jquery_ajax_error(jqXHR, exception){
     var msg = '';
     if (jqXHR.status === 0) {

@@ -15,6 +15,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <link rel="stylesheet" href="{{ asset('assets/plugins/fontawesome-free/css/all.min.css') }}">
 <!-- Theme style -->
 <link rel="stylesheet" href="{{ asset('assets/dist/css/adminlte.min.css') }}">
+<!-- Toastr style -->
+<link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css') }}">
 </head>
 <body class="layout-fixed layout-navbar-fixed sidebar-mini layout-footer-fixed">
 <div class="wrapper">
@@ -51,7 +53,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
         <div class="modal-body">
             <form id="formChangePassword">
-                <div class="form-group row" id="msg-change-password"></div>
+                @csrf
+                <div class="form-group row">
+                    <div class="col-12" id="msg-change-password">
+
+                    </div>
+                </div>
                 <div class="form-group row">
                     <label for="old_password" class="col-sm-5 col-form-label font-weight-normal">{{ multi_lang('old_password') }}</label>
                     <div class="col-sm-7">
@@ -74,7 +81,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ multi_lang('cancel') }}</button>
-          <button type="button" class="btn btn-primary">{{ multi_lang('save') }}</button>
+          <button type="button" id="btnSaveChangePassword" onclick="change_password()" class="btn btn-primary">{{ multi_lang('save') }}</button>
         </div>
       </div>
     </div>
@@ -88,8 +95,44 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <!-- AdminLTE App -->
 <script src="{{ asset('assets/dist/js/adminlte.min.js') }}"></script>
-<!-- Axios -->
-<script src="{{ asset('assets/dist/js/axios_1.2.2.min.js') }}"></script>
+<!-- Toastr -->
+<script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
+<!-- Custome -->
+<script src="{{ asset('assets/dist/js/custome.js') }}"></script>
+<script>
+    function change_password(){
+        $("#msg-change-password").html("");
+
+        $('#btnSaveChangePassword').text("{{ multi_lang('process') }}..."); //change button text
+        $('#btnSaveChangePassword').attr('disabled',true); //set button disable
+
+        $.ajax({
+            type: "POST",
+            url: 'change-password',
+            data: $("#formChangePassword").serialize(),
+        }).done(function (response) {
+
+            if(response.status){
+                toastr.success(response.message);
+                $('#changePasswordModal').modal('toggle');
+            }else{
+                $("#msg-change-password").html(response.message);
+            }
+
+            $('#btnSaveChangePassword').text("{{ multi_lang('save') }}"); //change button text
+            $('#btnSaveChangePassword').attr('disabled',false); //set button disable
+
+        }).fail( function (jqXHR, exception) {
+
+            let msg = jquery_ajax_error(jqXHR, exception)
+            toastr.error(msg);
+
+            $('#btnSaveChangePassword').text("{{ multi_lang('save') }}"); //change button text
+            $('#btnSaveChangePassword').attr('disabled',false); //set button disable
+
+        });
+    }
+</script>
 </body>
 </html>
 
