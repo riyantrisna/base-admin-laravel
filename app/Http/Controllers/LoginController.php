@@ -29,8 +29,8 @@ class LoginController extends Controller
                 'password' => ['required'],
             ],
             [
-                'email.required' => 'Email dibutuhkan.',
-                'password.required' => 'Password dibutuhkan',
+                'email.required' => multi_lang('email').' '.multi_lang('required'),
+                'password.required' => multi_lang('password').' '.multi_lang('required'),
             ]
         );
 
@@ -60,14 +60,14 @@ class LoginController extends Controller
                 $request->session()->regenerateToken();
 
                 return back()->with([
-                    'loginError'=> 'Anda tidak memiliki akses!',
+                    'loginError'=> multi_lang('you_dont_have_access'),
                     'email'=> $request->email,
                 ]);
             }
         }
 
         return back()->with([
-            'loginError'=> 'Username atau Password salah!',
+            'loginError'=> multi_lang('email_or_password_is_wrong'),
             'email'=> $request->email,
         ]);
     }
