@@ -42,7 +42,7 @@ class UserController extends Controller
 
         if(!empty($request->new_password) && !empty($request->re_new_password) && $request->new_password != $request->re_new_password){
             $result["status"] = $result["status"] && FALSE;
-            $validation_text.= "<li>".multi_lang('new_password_and_re_new_password_not_match')."</li>";
+            $result['message_item']['re_new_password'] = multi_lang('new_password_and_re_new_password_not_match');
         }
 
         $user = User::where('id', auth()->user()->id)->first();
