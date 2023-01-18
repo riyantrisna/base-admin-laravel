@@ -103,6 +103,23 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <!-- Custome -->
 <script src="{{ asset('assets/dist/js/custome.js') }}"></script>
 <script>
+    function open_change_password(){
+        $('#formChangePassword')[0].reset();
+        $("#msg-change-password").html("");
+
+        $("#old_password").removeClass('is-invalid');
+        $("#msg_old_password").removeClass('d-block');
+
+        $("#new_password").removeClass('is-invalid');
+        $("#msg_new_password").removeClass('d-block');
+
+        $("#re_new_password").removeClass('is-invalid');
+        $("#msg_re_new_password").removeClass('d-block');
+
+        $('#btnSaveChangePassword').text("{{ multi_lang('save') }}"); //change button text
+        $('#btnSaveChangePassword').attr('disabled',false); //set button disable
+    }
+
     function change_password(){
         $("#msg-change-password").html("");
 

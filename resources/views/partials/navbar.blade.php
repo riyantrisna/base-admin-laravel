@@ -21,7 +21,7 @@
                 <span class="">{{ auth()->user()->name }}</span>
             </a>
             <div class="dropdown-menu dropdown-menu dropdown-menu-right">
-                <a href="" class="dropdown-item" data-toggle="modal" data-target="#changePasswordModal" onclick="$('#formChangePassword')[0].reset();">
+                <a href="" class="dropdown-item" data-toggle="modal" data-target="#changePasswordModal" onclick="open_change_password()">
                     <i class="fas fa-cog mr-2"></i> {{ multi_lang('change_password') }}
                 </a>
                 <div class="dropdown-divider"></div>
