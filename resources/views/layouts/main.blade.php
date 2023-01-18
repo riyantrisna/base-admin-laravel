@@ -63,18 +63,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <label for="old_password" class="col-sm-5 col-form-label font-weight-normal">{{ multi_lang('old_password') }}</label>
                     <div class="col-sm-7">
                         <input type="password" class="form-control" id="old_password" name="old_password">
+                        <div class="invalid-feedback" id="msg_old_password"></div>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="new_password" class="col-sm-5 col-form-label font-weight-normal">{{ multi_lang('new_password') }}</label>
                     <div class="col-sm-7">
                         <input type="password" class="form-control" id="new_password" name="new_password">
+                        <div class="invalid-feedback" id="msg_new_password"></div>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="re_new_password" class="col-sm-5 col-form-label font-weight-normal">{{ multi_lang('re_new_password') }}</label>
                     <div class="col-sm-7">
                         <input type="password" class="form-control" id="re_new_password" name="re_new_password">
+                        <div class="invalid-feedback" id="msg_re_new_password"></div>
                     </div>
                 </div>
             </form>
@@ -103,6 +106,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
     function change_password(){
         $("#msg-change-password").html("");
 
+        $("#old_password").removeClass('is-invalid');
+        $("#msg_old_password").removeClass('d-block');
+
+        $("#new_password").removeClass('is-invalid');
+        $("#msg_new_password").removeClass('d-block');
+
+        $("#re_new_password").removeClass('is-invalid');
+        $("#msg_re_new_password").removeClass('d-block');
+
         $('#btnSaveChangePassword').text("{{ multi_lang('process') }}..."); //change button text
         $('#btnSaveChangePassword').attr('disabled',true); //set button disable
 
@@ -112,15 +124,32 @@ scratch. This page gets rid of all links and provides the needed markup only.
             data: $("#formChangePassword").serialize(),
         }).done(function (response) {
 
-            if(response.status){
+            if(response.status && response.status_item){
                 toastr.success(response.message);
                 $('#changePasswordModal').modal('toggle');
             }else{
-                $("#msg-change-password").html(response.message);
+                if(response.message != ""){
+                    $("#msg-change-password").html(response.message);
+                }
+
+                if(response.message_item.old_password !== undefined && response.message_item.old_password != ""){
+                    $("#old_password").html(response.message_item.old_password).addClass('is-invalid');
+                    $("#msg_old_password").html(response.message_item.old_password).addClass('d-block');
+                }
+
+                if(response.message_item.new_password !== undefined && response.message_item.new_password != ""){
+                    $("#new_password").html(response.message_item.new_password).addClass('is-invalid');
+                    $("#msg_new_password").html(response.message_item.new_password).addClass('d-block');
+                }
+
+                if(response.message_item.re_new_password !== undefined && response.message_item.re_new_password != ""){
+                    $("#re_new_password").html(response.message_item.re_new_password).addClass('is-invalid');
+                    $("#msg_re_new_password").html(response.message_item.re_new_password).addClass('d-block');
+                }
             }
 
             $('#btnSaveChangePassword').text("{{ multi_lang('save') }}"); //change button text
-            $('#btnSaveChangePassword').attr('disabled',false); //set button disable
+            $('#btnSaveChangePassword').attr('disabled',false); //set button disabl
 
         }).fail( function (jqXHR, exception) {
 

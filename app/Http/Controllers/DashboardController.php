@@ -8,7 +8,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $data['title'] = " - Dashboard";
+        $data['title'] = " - ".multi_lang('dashboard');
         return view('dashboard.index', $data);
     }
 }

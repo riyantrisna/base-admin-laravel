@@ -8,7 +8,7 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $data['title'] = " - Product";
+        $data['title'] = " - ".multi_lang('product');
         return view('product.index', $data);
     }
 }

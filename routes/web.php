@@ -5,6 +5,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductCategoryController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,8 +31,12 @@ Route::middleware(['admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
     Route::get('/product', [ProductController::class, 'index']);
     Route::get('/product-category', [ProductCategoryController::class, 'index']);
+
+    // User
+    Route::get('/user', [UserController::class, 'index']);
 });
 
 Route::middleware(['adminapi'])->group(function () {
-    Route::post('/change-password', [LoginController::class, 'changePassword']);
+    // User
+    Route::post('/change-password', [UserController::class, 'changePassword']);
 });
