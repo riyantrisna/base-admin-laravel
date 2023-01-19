@@ -17,6 +17,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <link rel="stylesheet" href="{{ asset('assets/dist/css/adminlte.min.css') }}">
 <!-- Toastr style -->
 <link rel="stylesheet" href="{{ asset('assets/plugins/toastr/toastr.min.css') }}">
+<!-- Datatable -->
+<link rel="stylesheet" href="{{ asset('assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+
 </head>
 <body class="layout-fixed layout-navbar-fixed sidebar-mini layout-footer-fixed">
 <div class="wrapper">
@@ -44,64 +49,52 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <!-- Modal -->
 <div class="modal fade" id="changePasswordModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <b class="modal-title" id="changePasswordModalLabel">{{ multi_lang('change_password') }}</b>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <form id="formChangePassword">
-                @csrf
-                <div class="form-group row">
-                    <div class="col-12" id="msg-change-password">
+        <div class="modal-content">
+            <div class="modal-header">
+            <b class="modal-title" id="changePasswordModalLabel">{{ multi_lang('change_password') }}</b>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <form id="formChangePassword">
+                    @csrf
+                    <div class="form-group row">
+                        <div class="col-12" id="msg-change-password">
 
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <label for="old_password" class="col-sm-5 col-form-label font-weight-normal">{{ multi_lang('old_password') }}</label>
-                    <div class="col-sm-7">
-                        <input type="password" class="form-control" id="old_password" name="old_password">
-                        <div class="invalid-feedback" id="msg_old_password"></div>
+                    <div class="form-group row">
+                        <label for="old_password" class="col-sm-5 col-form-label font-weight-normal">{{ multi_lang('old_password') }}</label>
+                        <div class="col-sm-7">
+                            <input type="password" class="form-control" id="old_password" name="old_password">
+                            <div class="invalid-feedback" id="msg_old_password"></div>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <label for="new_password" class="col-sm-5 col-form-label font-weight-normal">{{ multi_lang('new_password') }}</label>
-                    <div class="col-sm-7">
-                        <input type="password" class="form-control" id="new_password" name="new_password">
-                        <div class="invalid-feedback" id="msg_new_password"></div>
+                    <div class="form-group row">
+                        <label for="new_password" class="col-sm-5 col-form-label font-weight-normal">{{ multi_lang('new_password') }}</label>
+                        <div class="col-sm-7">
+                            <input type="password" class="form-control" id="new_password" name="new_password">
+                            <div class="invalid-feedback" id="msg_new_password"></div>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <label for="re_new_password" class="col-sm-5 col-form-label font-weight-normal">{{ multi_lang('re_new_password') }}</label>
-                    <div class="col-sm-7">
-                        <input type="password" class="form-control" id="re_new_password" name="re_new_password">
-                        <div class="invalid-feedback" id="msg_re_new_password"></div>
+                    <div class="form-group row">
+                        <label for="re_new_password" class="col-sm-5 col-form-label font-weight-normal">{{ multi_lang('re_new_password') }}</label>
+                        <div class="col-sm-7">
+                            <input type="password" class="form-control" id="re_new_password" name="re_new_password">
+                            <div class="invalid-feedback" id="msg_re_new_password"></div>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ multi_lang('cancel') }}</button>
+            <button type="button" id="btnSaveChangePassword" onclick="change_password()" class="btn btn-primary">{{ multi_lang('save') }}</button>
+            </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ multi_lang('cancel') }}</button>
-          <button type="button" id="btnSaveChangePassword" onclick="change_password()" class="btn btn-primary">{{ multi_lang('save') }}</button>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
 
-<!-- REQUIRED SCRIPTS -->
-
-<!-- jQuery -->
-<script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
-<!-- Bootstrap 4 -->
-<script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-<!-- AdminLTE App -->
-<script src="{{ asset('assets/dist/js/adminlte.min.js') }}"></script>
-<!-- Toastr -->
-<script src="{{ asset('assets/plugins/toastr/toastr.min.js') }}"></script>
-<!-- Custome -->
-<script src="{{ asset('assets/dist/js/custome.js') }}"></script>
 <script>
     function open_change_password(){
         $('#formChangePassword')[0].reset();

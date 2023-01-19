@@ -34,9 +34,11 @@ Route::middleware(['admin'])->group(function () {
 
     // User
     Route::get('/user', [UserController::class, 'index']);
+
 });
 
 Route::middleware(['adminapi'])->group(function () {
     // User
     Route::post('/change-password', [UserController::class, 'changePassword']);
+    Route::post('/user/data', [UserController::class, 'data']);
 });
