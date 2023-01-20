@@ -20,22 +20,22 @@
 		<div class="row">
             <!-- DataTable with Hover -->
             <div class="col-lg-12">
-                <div class="card mb-4">
-                    <div class="table-responsive p-3">
+                <div class="card mb-4 p-3">
+                    <div>
                         <button class="btn btn-success mb-3" onclick="add()"><i class="fas fa-plus mr-2"></i> Add</button>
-                        <table class="table table-bordered table-hover dataTable dtr-inline" id="dataTable" aria-describedby="example2_info">
-                            <thead>
-                                <tr>
-                                    <th>{{ multi_lang('number') }}</th>
-                                    <th>{{ multi_lang('action') }}</th>
-                                    <th>{{ multi_lang('name') }}</th>
-                                    <th>{{ multi_lang('email') }}</th>
-                                    <th>{{ multi_lang('role') }}</th>
-                                    <th>{{ multi_lang('last_login') }}</th>
-                                </tr>
-                            </thead>
-                        </table>
                     </div>
+                    <table class="table table-striped table-bordered dt-responsive nowrap" style="width:100%" id="dataTable" aria-describedby="data-user">
+                        <thead>
+                            <tr>
+                                <th>{{ multi_lang('number') }}</th>
+                                <th>{{ multi_lang('action') }}</th>
+                                <th>{{ multi_lang('name') }}</th>
+                                <th>{{ multi_lang('email') }}</th>
+                                <th>{{ multi_lang('role') }}</th>
+                                <th>{{ multi_lang('last_login') }}</th>
+                            </tr>
+                        </thead>
+                    </table>
                 </div>
             </div>
 		</div>
@@ -106,12 +106,6 @@
 	</div>
 </div>
 
-<style>
-table.dataTable td, table.dataTable th {
-    padding: 5px;
-}
-</style>
-
 <!-- Page level custom scripts -->
 <script>
     var table;
@@ -137,9 +131,31 @@ table.dataTable td, table.dataTable th {
                     "targets": [ 0,1 ], //last column
                     "orderable": false, //set not orderable
                 },
-                { "targets": 1, "width": '120px' },
-                {"targets": 0, "width": '20px'}
             ],
+            "language": {
+                "decimal":        "",
+                "emptyTable":     "{{ multi_lang('dt_empty_table') }}",
+                "info":           "{{ multi_lang('dt_info') }}",
+                "infoEmpty":      "{{ multi_lang('dt_info_empty') }}",
+                "infoFiltered":   "{{ multi_lang('dt_info_filtered') }}",
+                "infoPostFix":    "",
+                "thousands":      "{{ multi_lang('dt_thousands') }}",
+                "lengthMenu":     "{{ multi_lang('dt_length_menu') }}",
+                "loadingRecords": "{{ multi_lang('dt_loading_records') }}",
+                "processing":     "",
+                "search":         "{{ multi_lang('dt_search') }}",
+                "zeroRecords":    "{{ multi_lang('dt_zero_ecords') }}",
+                "paginate": {
+                    "first":      "{{ multi_lang('dt_paginate_first') }}",
+                    "last":       "{{ multi_lang('dt_paginate_last') }}",
+                    "next":       "{{ multi_lang('dt_paginate_next') }}",
+                    "previous":   "{{ multi_lang('dt_paginate_previous') }}"
+                },
+                "aria": {
+                    "sortAscending":  "{{ multi_lang('dt_aria_sort_ascending') }}",
+                    "sortDescending": "{{ multi_lang('dt_aria_sort_descending') }}"
+                }
+            }
         });
     });
 

@@ -21,7 +21,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
-
+<!-- Custome -->
+<link rel="stylesheet" href="{{ asset('assets/dist/css/custome.css') }}">
 </head>
 <body class="layout-fixed layout-navbar-fixed sidebar-mini layout-footer-fixed">
 <div class="wrapper">
