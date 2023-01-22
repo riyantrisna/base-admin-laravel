@@ -49,19 +49,18 @@
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="title_form"></h5>
+				<b class="modal-title" id="title_form"></b>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-body">
-				<div id="box_msg_user"></div>
 				<form id="form_user" autocomplete="nope">
 
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-danger" data-dismiss="modal">{{ multi_lang('close') }}</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">{{ multi_lang('close') }}</button>
 				<button type="button" class="btn btn-primary" id="btnSave" onclick="save()">{{ multi_lang('save') }}</button>
 			</div>
 		</div>
@@ -100,7 +99,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-danger" id="btnHapus">{{ multi_lang('delete') }}</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">{{ multi_lang('close') }}</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ multi_lang('close') }}</button>
 			</div>
 		</div>
 	</div>
@@ -167,21 +166,42 @@
     function add()
     {
         save_method = 'add';
-        $('#form_user').html(""); // reset form on modals
-        $('#body_detail').html("");
-        $("#box_msg_user").html('').hide();
+        $('#form_user').html("");
+
+        $("#inputName").removeClass('is-invalid');
+        $("#msg_name").removeClass('d-block');
+
+        $("#inputEmail").removeClass('is-invalid');
+        $("#msg_email").removeClass('d-block');
+
+        $("#inputRole").removeClass('is-invalid');
+        $("#msg_role").removeClass('d-block');
+
+        $("#inputLanguage").removeClass('is-invalid');
+        $("#msg_language").removeClass('d-block');
+
+        $("#inputStatus").removeClass('is-invalid');
+        $("#msg_status").removeClass('d-block');
+
+        $("#inputPassword").removeClass('is-invalid');
+        $("#msg_password").removeClass('d-block');
+
+        $("#inputRePassword").removeClass('is-invalid');
+        $("#msg_re_password").removeClass('d-block');
+
         $('#btnSave').text("{{ multi_lang('save') }}");
         $('#btnSave').attr('disabled',false);
-        $('#title_form').text("{{ multi_lang('add') }} {{ $title }}"); // Set Title to Bootstrap modal title
+
+        $('#title_form').text("{{ multi_lang('add') }} {{ $title }}");
 
         $.ajax({
-            url : "{{ url('/user/add-view') }}",
+            url : "{{ url('/user/add') }}",
             type: "GET",
-            dataType: "JSON",
+            dataType: "html",
             success: async function(data, textStatus, xhr)
             {
                 if(xhr.status == '200'){
-                    await $('#form_user').html(data.html);
+                    await $('#form_user').html(data);
                 }else{
                     toastr.error(xhr.statusText);
                 }
@@ -193,25 +213,45 @@
     function edit(id)
     {
         save_method = 'edit';
-        $('#form_user').html(""); // reset form on modals
-        $('#body_detail').html("");
-        $("#box_msg_user").html('').hide();
+        $('#form_user').html("");
+
+        $("#inputName").removeClass('is-invalid');
+        $("#msg_name").removeClass('d-block');
+
+        $("#inputEmail").removeClass('is-invalid');
+        $("#msg_email").removeClass('d-block');
+
+        $("#inputRole").removeClass('is-invalid');
+        $("#msg_role").removeClass('d-block');
+
+        $("#inputLanguage").removeClass('is-invalid');
+        $("#msg_language").removeClass('d-block');
+
+        $("#inputStatus").removeClass('is-invalid');
+        $("#msg_status").removeClass('d-block');
+
+        $("#inputPassword").removeClass('is-invalid');
+        $("#msg_password").removeClass('d-block');
+
+        $("#inputRePassword").removeClass('is-invalid');
+        $("#msg_re_password").removeClass('d-block');
+
         $('#btnSave').text("{{ multi_lang('save') }}");
         $('#btnSave').attr('disabled',false);
-        $('#title_form').text("{{ multi_lang('edit') }} {{ $title }}"); // Set Title to Bootstrap modal title
+
+        $('#title_form').text("{{ multi_lang('add') }} {{ $title }}");
 
         $.ajax({
-            url : "{{ url('/user/edit-view') }}/" + id,
+            url : "{{ url('/user/edit') }}/" + id,
             type: "GET",
-            dataType: "JSON",
+            dataType: "html",
             success: async function(data, textStatus, xhr)
             {
                 if(xhr.status == '200'){
-                    await $('#form_user').html(data.html);
+                    await $('#form_user').html(data);
                 }else{
                     toastr.error(xhr.statusText);
                 }
-
                 $('#modal_form').modal('show'); // show bootstrap modal
 
             }
@@ -220,6 +260,27 @@
 
     function save()
     {
+        $("#inputName").removeClass('is-invalid');
+        $("#msg_name").removeClass('d-block');
+
+        $("#inputEmail").removeClass('is-invalid');
+        $("#msg_email").removeClass('d-block');
+
+        $("#inputRole").removeClass('is-invalid');
+        $("#msg_role").removeClass('d-block');
+
+        $("#inputLanguage").removeClass('is-invalid');
+        $("#msg_language").removeClass('d-block');
+
+        $("#inputStatus").removeClass('is-invalid');
+        $("#msg_status").removeClass('d-block');
+
+        $("#inputPassword").removeClass('is-invalid');
+        $("#msg_password").removeClass('d-block');
+
+        $("#inputRePassword").removeClass('is-invalid');
+        $("#msg_re_password").removeClass('d-block');
+
         $('#btnSave').text("{{ multi_lang('process') }}..."); //change button text
         $('#btnSave').attr('disabled',true); //set button disable
         var url;
@@ -242,17 +303,49 @@
                     if(data.status)
                     {
                         $('#modal_form').modal('toggle');
-                        $("#box_msg_user").html('').hide();
                         await reload_table();
                         await toastr.success(data.message);
                     }
                     else
                     {
-                        await $('#box_msg_user').html(data.message).fadeOut().fadeIn();
-                        $('#modal_form').animate({ scrollTop: 0 }, 'slow');
+                        if(data.message_item.name !== undefined && data.message_item.name != ""){
+                            $("#inputName").addClass('is-invalid');
+                            $("#msg_name").html(data.message_item.name).addClass('d-block');
+                        }
+
+                        if(data.message_item.email !== undefined && data.message_item.email != ""){
+                            $("#inputEmail").addClass('is-invalid');
+                            $("#msg_email").html(data.message_item.email).addClass('d-block');
+                        }
+
+                        if(data.message_item.role !== undefined && data.message_item.role != ""){
+                            $("#inputRole").addClass('is-invalid');
+                            $("#msg_role").html(data.message_item.role).addClass('d-block');
+                        }
+
+                        if(data.message_item.language !== undefined && data.message_item.language != ""){
+                            $("#inputLanguage").addClass('is-invalid');
+                            $("#msg_language").html(data.message_item.language).addClass('d-block');
+                        }
+
+                        if(data.message_item.status !== undefined && data.message_item.status != ""){
+                            $("#inputStatus").addClass('is-invalid');
+                            $("#msg_status").html(data.message_item.status).addClass('d-block');
+                        }
+
+                        if(data.message_item.password !== undefined && data.message_item.password != ""){
+                            $("#inputPassword").addClass('is-invalid');
+                            $("#msg_password").html(data.message_item.password).addClass('d-block');
+                        }
+
+                        if(data.message_item.re_password !== undefined && data.message_item.re_password != ""){
+                            $("#inputRePassword").addClass('is-invalid');
+                            $("#msg_re_password").html(data.message_item.re_password).addClass('d-block');
+                        }
+
+                        $('#modal_form').animate({ scrollTop: $('.is-invalid:first').offset().top }, 'slow');
                     }
                 }else{
-                    $('#modal_form').modal('toggle');
                     toastr.error(xhr.statusText);
                 }
 
@@ -312,7 +405,7 @@
                     toastr.error(xhr.statusText);
                 }
 
-                $('#btnHapus').text('Delete');
+                $('#btnHapus').text("{{ multi_lang('delete') }}");
                 $('#btnHapus').attr('disabled',false);
                 $('#modal_delete').modal('toggle');
 

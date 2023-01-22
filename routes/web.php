@@ -41,4 +41,9 @@ Route::middleware(['adminapi'])->group(function () {
     // User
     Route::post('/change-password', [UserController::class, 'changePassword']);
     Route::post('/user/data', [UserController::class, 'data']);
+    Route::get('/user/add', [UserController::class, 'add']);
+    Route::post('/user/add', [UserController::class, 'doAdd']);
+    Route::get('/user/edit/{id}', [UserController::class, 'edit']);
+    Route::post('/user/edit', [UserController::class, 'doEdit']);
+    Route::get('/user/delete/{id}', [UserController::class, 'delete']);
 });

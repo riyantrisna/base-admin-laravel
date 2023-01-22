@@ -1,19 +1,34 @@
 function jquery_ajax_error(jqXHR, exception){
     var msg = '';
-    if (jqXHR.status === 0) {
+
+    if (jqXHR.status === 0)
+    {
         msg = 'Not connect.\n Verify Network.';
-    } else if (jqXHR.status == 404) {
+    }
+    else if (jqXHR.status == 404)
+    {
         msg = 'Requested page not found';
-    } else if (jqXHR.status == 500) {
+    }
+    else if (jqXHR.status == 500)
+    {
         msg = 'Internal Server Error';
-    } else if (exception === 'parsererror') {
+    }
+    else if (exception === 'parsererror')
+    {
         msg = 'Requested JSON parse failed.';
-    } else if (exception === 'timeout') {
+    }
+    else if (exception === 'timeout')
+    {
         msg = 'Time out error.';
-    } else if (exception === 'abort') {
+    }
+    else if (exception === 'abort')
+    {
         msg = 'Request aborted.';
-    } else {
+    }
+    else
+    {
         msg = 'Uncaught Error.\n' + jqXHR.responseText;
     }
+
     return msg
 }

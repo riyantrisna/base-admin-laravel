@@ -42,7 +42,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 	<div class="float-right d-none d-sm-inline">
 	</div>
 	<!-- Default to the left -->
-	<strong>Copyright &copy; {{ date('Y') }} Riyan Systemify.</strong> All rights reserved.
+	<strong>&copy; {{ date('Y') }} Riyan Systemify</strong>
 </footer>
 </div>
 <!-- ./wrapper -->
@@ -60,7 +60,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div class="modal-body">
                 <form id="formChangePassword">
                     @csrf
-                    <div class="form-group row">
+                    <div class="row">
                         <div class="col-12" id="msg-change-password">
 
                         </div>

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\MenuGroup;
+use App\Models\Language;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -24,10 +26,10 @@ class UserController extends Controller
         $length = $request->post('length');
 
         $columns = array(
-            1 => 'name',
-            2 => 'email',
-            3 => 'role',
-            4 => 'last_login'
+            2 => 'name',
+            3 => 'email',
+            4 => 'role',
+            5 => 'last_login'
         );
 
         $order = $columns[$request->order[0]['column']];
@@ -41,7 +43,7 @@ class UserController extends Controller
             'mgn.menugroupname_name AS role_name',
             'last_login'
         )
-        ->leftJoin('menu_group AS mg', 'mg.menugroup_id', 'users.id')
+        ->leftJoin('menu_group AS mg', 'mg.menugroup_id', 'users.role')
         ->leftJoin('menu_group_name AS mgn', 'mgn.menugroupname_menugroup_id', 'mg.menugroup_id')
         ->where('mgn.menugroupname_lang_code', auth()->user()->lang_code);
         if(!empty($keyword)){
@@ -50,7 +52,7 @@ class UserController extends Controller
                 $q->where('name', 'LIKE', $keyword)
                 ->orWhere('email', 'LIKE', $keyword)
                 ->orWhere('mgn.menugroupname_name', 'LIKE', $keyword)
-                ->orWhere(DB::raw('DATE_FORMAT(last_login,"%d/%m/%Y %H:%i:%s")'), 'LIKE', $keyword)
+                ->orWhere(DB::raw('IFNULL(DATE_FORMAT(last_login,"%d/%m/%Y %H:%i:%s"),"")'), 'LIKE', $keyword)
                 ;
             });
         }
@@ -93,6 +95,219 @@ class UserController extends Controller
         );
 
         return response()->json($response, 200);
+    }
+
+    public function add()
+    {
+        $data['role_master'] = MenuGroup::select(
+            'menu_group.menugroup_id AS id',
+            'mgn.menugroupname_name AS name',
+        )
+        ->leftJoin('menu_group_name AS mgn', function($join){
+            $join->on('mgn.menugroupname_menugroup_id', 'menu_group.menugroup_id');
+            $join->on('mgn.menugroupname_lang_code', DB::raw("'".auth()->user()->lang_code."'"));
+        })
+        ->orderBy('mgn.menugroupname_name', 'asc')
+        ->get()
+        ;
+
+        $data['language_master'] = Language::select(
+            'lang_code AS id',
+            'lang_name AS name'
+        )->get();
+
+        $data['status_master'] = array(
+            array('id' => 1, 'name' => multi_lang('active')),
+            array('id' => 0, 'name' => multi_lang('not_active')),
+        );
+
+        $data['status_master'] = json_decode(json_encode($data['status_master']), FALSE);
+
+        return view('user.add', $data);
+    }
+
+    public function doAdd(Request $request)
+    {
+        $result["status"] = TRUE;
+        $validation_text = "";
+        $result['status_item'] = TRUE;
+        $result['message_item']['name'] = "";
+        $result['message_item']['email'] = "";
+        $result['message_item']['role'] = "";
+        $result['message_item']['language'] = "";
+        $result['message_item']['status'] = "";
+        $result['message_item']['password'] = "";
+        $result['message_item']['re_password'] = "";
+
+        if(empty($request->name)){
+            $result['status_item'] = $result['status_item'] && FALSE;
+            $result['message_item']['name'] = multi_lang('name')." ".multi_lang('required');
+        }
+        if(empty($request->email)){
+            $result['status_item'] = $result['status_item'] && FALSE;
+            $result['message_item']['email'] = multi_lang('email')." ".multi_lang('required');
+        }
+        if(empty($request->role)){
+            $result['status_item'] = $result['status_item'] && FALSE;
+            $result['message_item']['role'] = multi_lang('role')." ".multi_lang('required');
+        }
+        if(empty($request->language)){
+            $result['status_item'] = $result['status_item'] && FALSE;
+            $result['message_item']['language'] = multi_lang('language')." ".multi_lang('required');
+        }
+        if($request->has('status') && $request->status == ""){
+            $result['status_item'] = $result['status_item'] && FALSE;
+            $result['message_item']['status'] = multi_lang('status')." ".multi_lang('required');
+        }
+        if(empty($request->password)){
+            $result['status_item'] = $result['status_item'] && FALSE;
+            $result['message_item']['password'] = multi_lang('password')." ".multi_lang('required');
+        }
+        if(empty($request->re_password)){
+            $result['status_item'] = $result['status_item'] && FALSE;
+            $result['message_item']['re_password'] = multi_lang('re_password')." ".multi_lang('required');
+        }
+        if(!empty($request->password) && !empty($request->re_password) && $request->password != $request->re_password){
+            $result['status_item'] = $result['status_item'] && FALSE;
+            $result['message_item']['re_password'] = multi_lang('password_and_re_password_not_match');
+        }
+
+        if($result["status_item"]){
+            $user = new User;
+
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+            $user->status = $request->status;
+            $user->role = $request->role;
+            $user->lang_code = $request->language;
+            $user->created_at = date('Y-m-d H:i:s');
+            $user->created_by = auth()->user()->id;
+
+            if($user->save()){
+                $result["status"] = TRUE;
+                $result["message"] = multi_lang('success_add_data');
+            } else {
+                $result["status"] = FALSE;
+                $result["message"] = multi_lang('failed_add_data');
+            }
+        }else{
+            $result["status"] = FALSE;
+        }
+
+        return response()->json($result, 200);
+    }
+
+    public function edit($id)
+    {
+        $data['detail'] = User::where('id', $id)->first();
+
+        $data['role_master'] = MenuGroup::select(
+            'menu_group.menugroup_id AS id',
+            'mgn.menugroupname_name AS name',
+        )
+        ->leftJoin('menu_group_name AS mgn', function($join){
+            $join->on('mgn.menugroupname_menugroup_id', 'menu_group.menugroup_id');
+            $join->on('mgn.menugroupname_lang_code', DB::raw("'".auth()->user()->lang_code."'"));
+        })
+        ->orderBy('mgn.menugroupname_name', 'asc')
+        ->get()
+        ;
+
+        $data['language_master'] = Language::select(
+            'lang_code AS id',
+            'lang_name AS name'
+        )->get();
+
+        $data['status_master'] = array(
+            array('id' => 1, 'name' => multi_lang('active')),
+            array('id' => 0, 'name' => multi_lang('not_active')),
+        );
+
+        $data['status_master'] = json_decode(json_encode($data['status_master']), FALSE);
+
+        return view('user.edit', $data);
+    }
+
+    public function doEdit(Request $request)
+    {
+        $result["status"] = TRUE;
+        $validation_text = "";
+        $result['status_item'] = TRUE;
+        $result['message_item']['name'] = "";
+        $result['message_item']['email'] = "";
+        $result['message_item']['role'] = "";
+        $result['message_item']['language'] = "";
+        $result['message_item']['status'] = "";
+        $result['message_item']['password'] = "";
+        $result['message_item']['re_password'] = "";
+
+        if(empty($request->name)){
+            $result['status_item'] = $result['status_item'] && FALSE;
+            $result['message_item']['name'] = multi_lang('name')." ".multi_lang('required');
+        }
+        if(empty($request->email)){
+            $result['status_item'] = $result['status_item'] && FALSE;
+            $result['message_item']['email'] = multi_lang('email')." ".multi_lang('required');
+        }
+        if(empty($request->role)){
+            $result['status_item'] = $result['status_item'] && FALSE;
+            $result['message_item']['role'] = multi_lang('role')." ".multi_lang('required');
+        }
+        if(empty($request->language)){
+            $result['status_item'] = $result['status_item'] && FALSE;
+            $result['message_item']['language'] = multi_lang('language')." ".multi_lang('required');
+        }
+        if($request->has('status') && $request->status == ""){
+            $result['status_item'] = $result['status_item'] && FALSE;
+            $result['message_item']['status'] = multi_lang('status')." ".multi_lang('required');
+        }
+        if(!empty($request->password) && !empty($request->re_password) && $request->password != $request->re_password){
+            $result['status_item'] = $result['status_item'] && FALSE;
+            $result['message_item']['re_password'] = multi_lang('password_and_re_password_not_match');
+        }
+
+        if($result["status_item"]){
+            $user = User::where('id', $request->id)->first();
+
+            $user->name = $request->name;
+            $user->email = $request->email;
+            if(!empty($request->password) && !empty($request->re_password) && $request->password == $request->re_password){
+                $user->password = Hash::make($request->password);
+            }
+            $user->status = $request->status;
+            $user->role = $request->role;
+            $user->lang_code = $request->language;
+            $user->updated_at = date('Y-m-d H:i:s');
+            $user->updated_by = auth()->user()->id;
+
+            if($user->save()){
+                $result["status"] = TRUE;
+                $result["message"] = multi_lang('success_edit_data');
+            } else {
+                $result["status"] = FALSE;
+                $result["message"] = multi_lang('failed_edit_data');
+            }
+        }else{
+            $result["status"] = FALSE;
+        }
+
+        return response()->json($result, 200);
+    }
+
+    public function delete($id)
+    {
+        $user = User::where('id', $id)->first();
+
+        if($user->delete()){
+            $result["status"] = TRUE;
+            $result["message"] = multi_lang('success_edit_data');
+        } else {
+            $result["status"] = FALSE;
+            $result["message"] = multi_lang('failed_edit_data');
+        }
+
+        return response()->json($result, 200);
     }
 
     public function changePassword(Request $request)
