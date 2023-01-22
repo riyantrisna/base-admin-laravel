@@ -45,5 +45,6 @@ Route::middleware(['adminapi'])->group(function () {
     Route::post('/user/add', [UserController::class, 'doAdd']);
     Route::get('/user/edit/{id}', [UserController::class, 'edit']);
     Route::post('/user/edit', [UserController::class, 'doEdit']);
+    Route::get('/user/detail/{id}', [UserController::class, 'detail']);
     Route::get('/user/delete/{id}', [UserController::class, 'delete']);
 });

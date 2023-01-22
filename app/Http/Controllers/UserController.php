@@ -295,16 +295,58 @@ class UserController extends Controller
         return response()->json($result, 200);
     }
 
+    public function detail($id)
+    {
+        $data['detail'] = User::select(
+            'users.id',
+            'users.name',
+            'users.email',
+            'users.status',
+            'users.last_login',
+            'users.role',
+            'mgn.menugroupname_name AS role_name',
+            'users.lang_code',
+            'cl.lang_name AS lang_code_name',
+            DB::raw('IFNULL(DATE_FORMAT(users.created_at,"%d/%m/%Y %H:%i:%s"),"") AS created_date'),
+            'users.created_by',
+            'users_a.name AS created_by_name',
+            DB::raw('IFNULL(DATE_FORMAT(users.updated_at,"%d/%m/%Y %H:%i:%s"),"") AS updated_date'),
+            'users.updated_by',
+            'users_b.name AS updated_by_name'
+        )
+        ->leftJoin('menu_group AS mg', 'mg.menugroup_id', 'users.role')
+        ->leftJoin('menu_group_name AS mgn', 'mgn.menugroupname_menugroup_id', 'mg.menugroup_id')
+        ->leftJoin('core_lang AS cl', 'cl.lang_code', 'users.lang_code')
+        ->leftJoin('users AS users_a', 'users_a.id', 'users.created_by')
+        ->leftJoin('users AS users_b', 'users_a.id', 'users.updated_by')
+        ->where('mgn.menugroupname_lang_code', auth()->user()->lang_code)
+        ->where('users.id', $id)->first();
+
+        $data['detail']->status = $data['detail']->status == 1 ? multi_lang('active') : multi_lang('not_active');
+        if(!empty($data['detail']->created_date) && !empty($data['detail']->created_by_name)){
+            $data['detail']->created =  $data['detail']->created_date." ".multi_lang('by')." ".$data['detail']->created_by_name;
+        }else{
+            $data['detail']->created = "-";
+        }
+        if(!empty($data['detail']->updated_date) && !empty($data['detail']->updated_by_name)){
+            $data['detail']->updated =  $data['detail']->updated_date." ".multi_lang('by')." ".$data['detail']->updated_by_name;
+        }else{
+            $data['detail']->updated = "-";
+        }
+
+        return view('user.detail', $data);
+    }
+
     public function delete($id)
     {
         $user = User::where('id', $id)->first();
 
         if($user->delete()){
             $result["status"] = TRUE;
-            $result["message"] = multi_lang('success_edit_data');
+            $result["message"] = multi_lang('success_delete_data');
         } else {
             $result["status"] = FALSE;
-            $result["message"] = multi_lang('failed_edit_data');
+            $result["message"] = multi_lang('failed_delete_data');
         }
 
         return response()->json($result, 200);

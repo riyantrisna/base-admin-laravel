@@ -364,11 +364,11 @@
         $.ajax({
             url : "{{ url('/user/detail') }}/" + id,
             type: "GET",
-            dataType: "JSON",
+            dataType: "html",
             success: async function(data, textStatus, xhr)
             {
                 if(xhr.status == '200'){
-                    $('#body_detail').html(data.html);
+                    $('#body_detail').html(data);
                 }else{
                     toastr.error(xhr.statusText);
                 }
