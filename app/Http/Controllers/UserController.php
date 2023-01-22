@@ -146,6 +146,12 @@ class UserController extends Controller
         if(empty($request->email)){
             $result['status_item'] = $result['status_item'] && FALSE;
             $result['message_item']['email'] = multi_lang('email')." ".multi_lang('required');
+        }else{
+            $check_user = User::select('id')->where('email', $request->email)->first();
+            if(!empty($check_user->id)){
+                $result['status_item'] = $result['status_item'] && FALSE;
+                $result['message_item']['email'] = multi_lang('email')." ".multi_lang('is_registered');
+            }
         }
         if(empty($request->role)){
             $result['status_item'] = $result['status_item'] && FALSE;
@@ -249,6 +255,12 @@ class UserController extends Controller
         if(empty($request->email)){
             $result['status_item'] = $result['status_item'] && FALSE;
             $result['message_item']['email'] = multi_lang('email')." ".multi_lang('required');
+        }else{
+            $check_user = User::select('id')->where('email', $request->email)->whereNotIn('id', [$request->id])->first();
+            if(!empty($check_user->id)){
+                $result['status_item'] = $result['status_item'] && FALSE;
+                $result['message_item']['email'] = multi_lang('email')." ".multi_lang('is_registered');
+            }
         }
         if(empty($request->role)){
             $result['status_item'] = $result['status_item'] && FALSE;
