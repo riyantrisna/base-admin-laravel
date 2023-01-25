@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AccessRightController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,8 @@ Route::middleware(['admin'])->group(function () {
 
     // User
     Route::get('/user', [UserController::class, 'index']);
+    // Access Right
+    Route::get('/access-right', [AccessRightController::class, 'index']);
 
 });
 
@@ -47,4 +50,13 @@ Route::middleware(['adminapi'])->group(function () {
     Route::post('/user/edit', [UserController::class, 'doEdit']);
     Route::get('/user/detail/{id}', [UserController::class, 'detail']);
     Route::get('/user/delete/{id}', [UserController::class, 'delete']);
+
+    // Access Right
+    Route::post('/access-right/data', [AccessRightController::class, 'data']);
+    Route::get('/access-right/add', [AccessRightController::class, 'add']);
+    Route::post('/access-right/add', [AccessRightController::class, 'doAdd']);
+    Route::get('/access-right/edit/{id}', [AccessRightController::class, 'edit']);
+    Route::post('/access-right/edit', [AccessRightController::class, 'doEdit']);
+    Route::get('/access-right/detail/{id}', [AccessRightController::class, 'detail']);
+    Route::get('/access-right/delete/{id}', [AccessRightController::class, 'delete']);
 });

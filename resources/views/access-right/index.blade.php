@@ -6,7 +6,8 @@
 		<div class="row mb-2">
 		<div class="col-sm-12">
 			<ol class="breadcrumb float-sm-left">
-			    <li class="breadcrumb-item active">{{ multi_lang('user') }}</li>
+			    <li class="breadcrumb-item">{{ multi_lang('setting') }}</li>
+			    <li class="breadcrumb-item active">{{ multi_lang('access_right') }}</li>
 			</ol>
 		</div><!-- /.col -->
 		</div><!-- /.row -->
@@ -30,9 +31,7 @@
                                 <th>{{ multi_lang('number') }}</th>
                                 <th>{{ multi_lang('action') }}</th>
                                 <th>{{ multi_lang('name') }}</th>
-                                <th>{{ multi_lang('email') }}</th>
-                                <th>{{ multi_lang('role') }}</th>
-                                <th>{{ multi_lang('last_login') }}</th>
+                                <th>{{ multi_lang('home_menu') }}</th>
                             </tr>
                         </thead>
                     </table>
@@ -116,7 +115,7 @@
             "processing": true,
             "serverSide": true,
             "ajax": {
-                "url": "{{ url('/user/data') }}",
+                "url": "{{ url('/access-right/data') }}",
                 "data": {
                     "_token": "{{ csrf_token() }}"
                 },
@@ -176,26 +175,19 @@
         save_method = 'add';
         $('#form_user').html("");
 
-        $("#inputName").removeClass('is-invalid');
-        $("#msg_name").removeClass('d-block');
+        @if(!empty($language_master_json))
+        var menu_master_json = {!! $language_master_json !!}
+        menu_master_json.forEach(function(item, index){
+            $("#inputName_"+item.id).removeClass('is-invalid');
+            $("#msg_name_"+item.id).removeClass('d-block');
+        });
+        @endif
 
-        $("#inputEmail").removeClass('is-invalid');
-        $("#msg_email").removeClass('d-block');
+        $("#inputHomeMenu").removeClass('is-invalid');
+        $("#msg_home_menu").removeClass('d-block');
 
-        $("#inputRole").removeClass('is-invalid');
-        $("#msg_role").removeClass('d-block');
-
-        $("#inputLanguage").removeClass('is-invalid');
-        $("#msg_language").removeClass('d-block');
-
-        $("#inputStatus").removeClass('is-invalid');
-        $("#msg_status").removeClass('d-block');
-
-        $("#inputPassword").removeClass('is-invalid');
-        $("#msg_password").removeClass('d-block');
-
-        $("#inputRePassword").removeClass('is-invalid');
-        $("#msg_re_password").removeClass('d-block');
+        $("#inputMenuAccess").removeClass('is-invalid').addClass('border');
+        $("#msg_menu_access").removeClass('d-block');
 
         $('#btnSave').text("{{ multi_lang('save') }}");
         $('#btnSave').attr('disabled',false);
@@ -203,7 +195,7 @@
         $('#title_form').text("{{ multi_lang('add') }} {{ $title }}");
 
         $.ajax({
-            url : "{{ url('/user/add') }}",
+            url : "{{ url('/access-right/add') }}",
             type: "GET",
             dataType: "html",
             success: async function(data, textStatus, xhr)
@@ -223,26 +215,19 @@
         save_method = 'edit';
         $('#form_user').html("");
 
-        $("#inputName").removeClass('is-invalid');
-        $("#msg_name").removeClass('d-block');
+        @if(!empty($language_master_json))
+        var menu_master_json = {!! $language_master_json !!}
+        menu_master_json.forEach(function(item, index){
+            $("#inputName_"+item.id).removeClass('is-invalid');
+            $("#msg_name_"+item.id).removeClass('d-block');
+        });
+        @endif
 
-        $("#inputEmail").removeClass('is-invalid');
-        $("#msg_email").removeClass('d-block');
+        $("#inputHomeMenu").removeClass('is-invalid');
+        $("#msg_home_menu").removeClass('d-block');
 
-        $("#inputRole").removeClass('is-invalid');
-        $("#msg_role").removeClass('d-block');
-
-        $("#inputLanguage").removeClass('is-invalid');
-        $("#msg_language").removeClass('d-block');
-
-        $("#inputStatus").removeClass('is-invalid');
-        $("#msg_status").removeClass('d-block');
-
-        $("#inputPassword").removeClass('is-invalid');
-        $("#msg_password").removeClass('d-block');
-
-        $("#inputRePassword").removeClass('is-invalid');
-        $("#msg_re_password").removeClass('d-block');
+        $("#inputMenuAccess").removeClass('is-invalid').addClass('border');
+        $("#msg_menu_access").removeClass('d-block');
 
         $('#btnSave').text("{{ multi_lang('save') }}");
         $('#btnSave').attr('disabled',false);
@@ -250,7 +235,7 @@
         $('#title_form').text("{{ multi_lang('add') }} {{ $title }}");
 
         $.ajax({
-            url : "{{ url('/user/edit') }}/" + id,
+            url : "{{ url('/access-right/edit') }}/" + id,
             type: "GET",
             dataType: "html",
             success: async function(data, textStatus, xhr)
@@ -268,35 +253,28 @@
 
     function save()
     {
-        $("#inputName").removeClass('is-invalid');
-        $("#msg_name").removeClass('d-block');
+        @if(!empty($language_master_json))
+        var menu_master_json = {!! $language_master_json !!}
+        menu_master_json.forEach(function(item, index){
+            $("#inputName_"+item.id).removeClass('is-invalid');
+            $("#msg_name_"+item.id).removeClass('d-block').hide();
+        });
+        @endif
 
-        $("#inputEmail").removeClass('is-invalid');
-        $("#msg_email").removeClass('d-block');
+        $("#inputHomeMenu").removeClass('is-invalid');
+        $("#msg_home_menu").removeClass('d-block');
 
-        $("#inputRole").removeClass('is-invalid');
-        $("#msg_role").removeClass('d-block');
-
-        $("#inputLanguage").removeClass('is-invalid');
-        $("#msg_language").removeClass('d-block');
-
-        $("#inputStatus").removeClass('is-invalid');
-        $("#msg_status").removeClass('d-block');
-
-        $("#inputPassword").removeClass('is-invalid');
-        $("#msg_password").removeClass('d-block');
-
-        $("#inputRePassword").removeClass('is-invalid');
-        $("#msg_re_password").removeClass('d-block');
+        $("#inputMenuAccess").removeClass('is-invalid').addClass('border');
+        $("#msg_menu_access").removeClass('d-block');
 
         $('#btnSave').text("{{ multi_lang('process') }}..."); //change button text
         $('#btnSave').attr('disabled',true); //set button disable
         var url;
 
         if(save_method == 'add') {
-            url = "{{ url('/user/add') }}";
+            url = "{{ url('/access-right/add') }}";
         } else {
-            url = "{{ url('/user/edit') }}";
+            url = "{{ url('/access-right/edit') }}";
         }
 
         var data_form = $('#form_user').serialize()+ "&" + $.param({_token:"{{ csrf_token() }}"});
@@ -316,39 +294,24 @@
                     }
                     else
                     {
-                        if(data.message_item.name !== undefined && data.message_item.name != ""){
-                            $("#inputName").addClass('is-invalid');
-                            $("#msg_name").html(data.message_item.name).addClass('d-block');
+                        @if(!empty($language_master_json))
+                        var menu_master_json = {!! $language_master_json !!}
+                        menu_master_json.forEach(function(item, index){
+                            if(data.message_item.name !== undefined && data.message_item.name.length > 0 && data.message_item.name[index] != ""){
+                                $("#inputName_"+item.id).addClass('is-invalid');
+                                $("#msg_name_"+item.id).html(data.message_item.name[index]).addClass('d-block');
+                            }
+                        });
+                        @endif
+
+                        if(data.message_item.home_menu !== undefined && data.message_item.home_menu != ""){
+                            $("#inputHomeMenu").addClass('is-invalid');
+                            $("#msg_home_menu").html(data.message_item.home_menu).addClass('d-block');
                         }
 
-                        if(data.message_item.email !== undefined && data.message_item.email != ""){
-                            $("#inputEmail").addClass('is-invalid');
-                            $("#msg_email").html(data.message_item.email).addClass('d-block');
-                        }
-
-                        if(data.message_item.role !== undefined && data.message_item.role != ""){
-                            $("#inputRole").addClass('is-invalid');
-                            $("#msg_role").html(data.message_item.role).addClass('d-block');
-                        }
-
-                        if(data.message_item.language !== undefined && data.message_item.language != ""){
-                            $("#inputLanguage").addClass('is-invalid');
-                            $("#msg_language").html(data.message_item.language).addClass('d-block');
-                        }
-
-                        if(data.message_item.status !== undefined && data.message_item.status != ""){
-                            $("#inputStatus").addClass('is-invalid');
-                            $("#msg_status").html(data.message_item.status).addClass('d-block');
-                        }
-
-                        if(data.message_item.password !== undefined && data.message_item.password != ""){
-                            $("#inputPassword").addClass('is-invalid');
-                            $("#msg_password").html(data.message_item.password).addClass('d-block');
-                        }
-
-                        if(data.message_item.re_password !== undefined && data.message_item.re_password != ""){
-                            $("#inputRePassword").addClass('is-invalid');
-                            $("#msg_re_password").html(data.message_item.re_password).addClass('d-block');
+                        if(data.message_item.menu_access !== undefined && data.message_item.menu_access != ""){
+                            $("#inputMenuAccess").addClass('is-invalid').css({border: "1px #DC3544 solid"}).removeClass('border');
+                            $("#msg_menu_access").html(data.message_item.menu_access).addClass('d-block');
                         }
 
                         $('#modal_form').animate({ scrollTop: $('.is-invalid:first').offset().top }, 'slow');
@@ -370,7 +333,7 @@
         $('#form_user').html("");
 
         $.ajax({
-            url : "{{ url('/user/detail') }}/" + id,
+            url : "{{ url('/access-right/detail') }}/" + id,
             type: "GET",
             dataType: "html",
             success: async function(data, textStatus, xhr)
@@ -401,7 +364,7 @@
         $('#btnHapus').attr('disabled',true); //set button disable
 
         $.ajax({
-            url : "{{ url('/user/delete') }}/" + id,
+            url : "{{ url('/access-right/delete') }}/" + id,
             type: "GET",
             dataType: "JSON",
             success: function(data, textStatus, xhr)
@@ -419,6 +382,16 @@
 
             }
         });
+    }
+
+    function switch_menu_access(menu_id){
+        if($('#menu_'+menu_id).is(':checked')){
+            $('#menu_lable_'+menu_id).html("{{ multi_lang('yes') }}");
+            $('#menu_name_'+menu_id).css({opacity: 1});
+        }else{
+            $('#menu_lable_'+menu_id).html("{{ multi_lang('no') }}");
+            $('#menu_name_'+menu_id).css({opacity: 0.5});
+        }
     }
 </script>
 @endsection
