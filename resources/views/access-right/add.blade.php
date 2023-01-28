@@ -27,6 +27,7 @@
     <div class="col-sm-9">
         <div id="inputMenuAccess" class="row p-1 border" style="margin: 1px;">
             {{ echo_menu_access() }}
+            <div class="p-1"></div>
         </div>
         <div class="invalid-feedback" id="msg_menu_access"></div>
     </div>

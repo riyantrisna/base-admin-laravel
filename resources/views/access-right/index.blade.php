@@ -6,8 +6,7 @@
 		<div class="row mb-2">
 		<div class="col-sm-12">
 			<ol class="breadcrumb float-sm-left">
-			    <li class="breadcrumb-item">{{ multi_lang('setting') }}</li>
-			    <li class="breadcrumb-item active">{{ multi_lang('access_right') }}</li>
+                {!! breadcrumb() !!}
 			</ol>
 		</div><!-- /.col -->
 		</div><!-- /.row -->
@@ -384,13 +383,40 @@
         });
     }
 
-    function switch_menu_access(menu_id){
+    function switch_menu_access(menu_id, parent, child){
+        var parent_arr = parent.split(",");
+        var child_arr = child.split(",");
+
         if($('#menu_'+menu_id).is(':checked')){
             $('#menu_lable_'+menu_id).html("{{ multi_lang('yes') }}");
             $('#menu_name_'+menu_id).css({opacity: 1});
+
+            parent_arr.forEach(function(item, index){
+                $('#menu_lable_'+item).html("{{ multi_lang('yes') }}");
+                $('#menu_name_'+item).css({opacity: 1});
+                $('#menu_'+item).prop('checked', true);
+            });
+
+            child_arr.forEach(function(item, index){
+                $('#menu_lable_'+item).html("{{ multi_lang('yes') }}");
+                $('#menu_name_'+item).css({opacity: 1});
+                $('#menu_'+item).prop('checked', true);
+            });
         }else{
             $('#menu_lable_'+menu_id).html("{{ multi_lang('no') }}");
             $('#menu_name_'+menu_id).css({opacity: 0.5});
+
+            parent_arr.forEach(function(item, index){
+                $('#menu_lable_'+item).html("{{ multi_lang('no') }}");
+                $('#menu_name_'+item).css({opacity: 0.5});
+                $('#menu_'+item).prop('checked', false);
+            });
+
+            child_arr.forEach(function(item, index){
+                $('#menu_lable_'+item).html("{{ multi_lang('no') }}");
+                $('#menu_name_'+item).css({opacity: 0.5});
+                $('#menu_'+item).prop('checked', false);
+            });
         }
     }
 </script>
