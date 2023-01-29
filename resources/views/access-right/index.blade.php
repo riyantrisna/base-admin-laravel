@@ -231,7 +231,7 @@
         $('#btnSave').text("{{ multi_lang('save') }}");
         $('#btnSave').attr('disabled',false);
 
-        $('#title_form').text("{{ multi_lang('add') }} {{ $title }}");
+        $('#title_form').text("{{ multi_lang('edit') }} {{ $title }}");
 
         $.ajax({
             url : "{{ url('/access-right/edit') }}/" + id,
@@ -241,6 +241,17 @@
             {
                 if(xhr.status == '200'){
                     await $('#form_user').html(data);
+
+                    var menu_data = $("#menugroup_menu_id").val();
+                    if(menu_data !== undefined && menu_data != ""){
+                        var menu_arr = menu_data.split(",");
+
+                        menu_arr.forEach(function(item, index){
+                            $('#menu_lable_'+item).html("{{ multi_lang('yes') }}");
+                            $('#menu_name_'+item).css({opacity: 1});
+                            $('#menu_'+item).prop('checked', true);
+                        });
+                    }
                 }else{
                     toastr.error(xhr.statusText);
                 }
@@ -339,6 +350,18 @@
             {
                 if(xhr.status == '200'){
                     $('#body_detail').html(data);
+
+                    var menu_data = $("#menugroup_menu_id").val();
+                    if(menu_data !== undefined && menu_data != ""){
+                        var menu_arr = menu_data.split(",");
+
+                        menu_arr.forEach(function(item, index){
+                            $('#menu_lable_'+item).html("{{ multi_lang('yes') }}");
+                            $('#menu_name_'+item).css({opacity: 1});
+                            $('#menu_'+item).prop('checked', true);
+                        });
+                    }
+                    $('.menu_cb').attr("disabled", true);
                 }else{
                     toastr.error(xhr.statusText);
                 }
@@ -405,12 +428,6 @@
         }else{
             $('#menu_lable_'+menu_id).html("{{ multi_lang('no') }}");
             $('#menu_name_'+menu_id).css({opacity: 0.5});
-
-            parent_arr.forEach(function(item, index){
-                $('#menu_lable_'+item).html("{{ multi_lang('no') }}");
-                $('#menu_name_'+item).css({opacity: 0.5});
-                $('#menu_'+item).prop('checked', false);
-            });
 
             child_arr.forEach(function(item, index){
                 $('#menu_lable_'+item).html("{{ multi_lang('no') }}");

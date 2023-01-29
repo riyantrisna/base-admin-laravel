@@ -247,7 +247,7 @@
         $('#btnSave').text("{{ multi_lang('save') }}");
         $('#btnSave').attr('disabled',false);
 
-        $('#title_form').text("{{ multi_lang('add') }} {{ $title }}");
+        $('#title_form').text("{{ multi_lang('edit') }} {{ $title }}");
 
         $.ajax({
             url : "{{ url('/user/edit') }}/" + id,

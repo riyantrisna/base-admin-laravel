@@ -113,7 +113,7 @@ if (!function_exists('echo_menu_access'))
                     .$indent.'<i class="'.$menu['menu_icon'].'"></i>&nbsp;'.$menu['menuname_name'].
                 '</div>
                 <div class="custom-control custom-switch col-sm-3 mt-2">
-                    <input type="checkbox" class="custom-control-input" id="menu_'.$menu['menu_id'].'" onclick="switch_menu_access(\''.$menu['menu_id'].'\',\''.$parent.'\',\''.$menu_child_str.'\')" name="menu['.$menu['menu_id'].']" value="'.$menu['menu_id'].'">
+                    <input type="checkbox" class="custom-control-input menu_cb" id="menu_'.$menu['menu_id'].'" onclick="switch_menu_access(\''.$menu['menu_id'].'\',\''.$parent.'\',\''.$menu_child_str.'\')" name="menu['.$menu['menu_id'].']" value="'.$menu['menu_id'].'">
                     <label class="custom-control-label font-weight-normal" for="menu_'.$menu['menu_id'].'" id="menu_lable_'.$menu['menu_id'].'">'.multi_lang('no').'</label>
                 </div>
             ';
