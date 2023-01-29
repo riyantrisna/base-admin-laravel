@@ -224,3 +224,64 @@ if (!function_exists('multi_lang'))
         }
     }
 }
+
+if (!function_exists('get_base64_image_size'))
+{
+    function get_base64_image_size($base64Image){ //return memory size in B, KB, MB
+        try{
+            $size_in_bytes = (int) (strlen(rtrim($base64Image, '=')) * 3 / 4);
+            $size_in_kb    = $size_in_bytes / 1024;
+            // $size_in_mb    = $size_in_kb / 1024;
+
+            return $size_in_kb;
+        }
+        catch(Exception $e){
+            return $e;
+        }
+    }
+}
+
+if (!function_exists('upload_base64'))
+{
+    function upload_base64($image, $path, $max_size, $type_allow){
+
+        $file_size = get_base64_image_size($image);
+
+        if($file_size <= $max_size){
+
+            $image_name = md5(uniqid(rand(), true).date('YmdHis'));
+            $ext = explode(';', $image);
+            $ext = explode('/', $ext[0]);
+            $ext = end($ext);
+            $filename = $image_name.'.'.$ext;
+            $image = explode(',', $image);
+            $file = $path.$filename;
+
+            if(in_array($ext, explode('|', $type_allow))){
+                $status = file_put_contents($file, base64_decode($image[1]));
+                if($status !== false){
+                    chmod($file,0777);
+                    $result['status'] = true;
+                    $result['file'] = $filename;
+                    $result['message'] = multi_lang('success_upload');
+                }else{
+                    $result['status'] = false;
+                    $result['file'] = '';
+                    $result['message'] = multi_lang('failed_upload');
+                }
+            }else{
+                $result['status'] = false;
+                $result['file'] = '';
+                $result['message'] = multi_lang('allowed_file_is').' ('.(str_replace('|', ', ', $type_allow)).')';
+            }
+
+        }else{
+            $result['status'] = false;
+            $result['file'] = '';
+            $result['message'] = multi_lang('max_file_is').' '.$max_size.'KB';
+        }
+
+        return $result;
+
+    }
+}

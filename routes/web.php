@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AccessRightController;
+use App\Http\Controllers\CompanyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +38,8 @@ Route::middleware(['admin'])->group(function () {
     Route::get('/user', [UserController::class, 'index']);
     // Access Right
     Route::get('/access-right', [AccessRightController::class, 'index']);
+    // Company
+    Route::get('/company', [CompanyController::class, 'index']);
 
 });
 
@@ -59,4 +62,7 @@ Route::middleware(['adminapi'])->group(function () {
     Route::post('/access-right/edit', [AccessRightController::class, 'doEdit']);
     Route::get('/access-right/detail/{id}', [AccessRightController::class, 'detail']);
     Route::get('/access-right/delete/{id}', [AccessRightController::class, 'delete']);
+
+    // Company
+    Route::post('/company', [CompanyController::class, 'doEdit']);
 });

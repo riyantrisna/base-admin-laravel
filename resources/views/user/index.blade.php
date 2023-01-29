@@ -55,7 +55,7 @@
 				</button>
 			</div>
 			<div class="modal-body">
-				<form id="form_user" autocomplete="nope">
+				<form id="form_data" autocomplete="nope">
 
 				</form>
 			</div>
@@ -174,7 +174,7 @@
     function add()
     {
         save_method = 'add';
-        $('#form_user').html("");
+        $('#form_data').html("");
 
         $("#inputName").removeClass('is-invalid');
         $("#msg_name").removeClass('d-block');
@@ -209,7 +209,7 @@
             success: async function(data, textStatus, xhr)
             {
                 if(xhr.status == '200'){
-                    await $('#form_user').html(data);
+                    await $('#form_data').html(data);
                 }else{
                     toastr.error(xhr.statusText);
                 }
@@ -221,7 +221,7 @@
     function edit(id)
     {
         save_method = 'edit';
-        $('#form_user').html("");
+        $('#form_data').html("");
 
         $("#inputName").removeClass('is-invalid');
         $("#msg_name").removeClass('d-block');
@@ -256,7 +256,7 @@
             success: async function(data, textStatus, xhr)
             {
                 if(xhr.status == '200'){
-                    await $('#form_user').html(data);
+                    await $('#form_data').html(data);
                 }else{
                     toastr.error(xhr.statusText);
                 }
@@ -299,7 +299,7 @@
             url = "{{ url('/user/edit') }}";
         }
 
-        var data_form = $('#form_user').serialize()+ "&" + $.param({_token:"{{ csrf_token() }}"});
+        var data_form = $('#form_data').serialize()+ "&" + $.param({_token:"{{ csrf_token() }}"});
         $.ajax({
             url : url,
             type: "POST",
@@ -367,7 +367,7 @@
     function detail(id)
     {
         $('#title_detail').text("{{ multi_lang('detail') }} {{ $title }}"); // Set Title to Bootstrap modal title
-        $('#form_user').html("");
+        $('#form_data').html("");
 
         $.ajax({
             url : "{{ url('/user/detail') }}/" + id,
